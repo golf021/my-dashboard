@@ -81,10 +81,128 @@
         opacity: 0;
       }
     }
+
+    /* สไตล์สำหรับสติกเกอร์เด้ง - ค่าจากโค้ดก่อนหน้า */
+    .sticker {
+      position: fixed;
+      bottom: 0;  /* ชิดขอบล่าง */
+      left: 0;    /* ชิดขอบซ้าย */
+      width: 480px;  /* ขนาด 4 เท่า */
+      height: 480px; /* ขนาด 4 เท่า */
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0) translateY(76px); /* ประมาณ 2 cm (76px) */
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+    
+    .sticker.active {
+      opacity: 1;
+      transform: scale(1) translateY(76px); /* ประมาณ 2 cm (76px) */
+      pointer-events: auto;
+      animation: bounce 3.6s ease-in-out; /* ลดความเร็วลง 20% */
+    }
+    
+    @keyframes bounce {
+      0%, 100% {
+        transform: scale(1) translateY(76px); /* ประมาณ 2 cm (76px) */
+      }
+      10%, 30%, 50%, 70%, 90% {
+        transform: scale(1.1) translateY(66px); /* ปรับค่า translateY ให้เด้ง */
+      }
+      20%, 40%, 60%, 80% {
+        transform: scale(1) translateY(76px); /* ประมาณ 2 cm (76px) */
+      }
+    }
+    
+    .sticker img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sticker {
+        width: 360px;   /* ปรับขนาดสำหรับแท็บเล็ต */
+        height: 360px;  /* ปรับขนาดสำหรับแท็บเล็ต */
+        transform: scale(0) translateY(56px); /* ประมาณ 2 cm (56px สำหรับแท็บเล็ต) */
+      }
+      
+      .sticker.active {
+        transform: scale(1) translateY(56px); /* ประมาณ 2 cm (56px สำหรับแท็บเล็ต) */
+      }
+      
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(1) translateY(56px); /* ประมาณ 2 cm (56px สำหรับแท็บเล็ต) */
+        }
+        10%, 30%, 50%, 70%, 90% {
+          transform: scale(1.1) translateY(46px); /* ปรับค่า translateY ให้เด้ง */
+        }
+        20%, 40%, 60%, 80% {
+          transform: scale(1) translateY(56px); /* ประมาณ 2 cm (56px สำหรับแท็บเล็ต) */
+        }
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .sticker {
+        width: 320px;   /* ปรับขนาดสำหรับมือถือ */
+        height: 320px;  /* ปรับขนาดสำหรับมือถือ */
+        transform: scale(0) translateY(38px); /* ประมาณ 2 cm (38px สำหรับมือถือ) */
+      }
+      
+      .sticker.active {
+        transform: scale(1) translateY(38px); /* ประมาณ 2 cm (38px สำหรับมือถือ) */
+      }
+      
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(1) translateY(38px); /* ประมาณ 2 cm (38px สำหรับมือถือ) */
+        }
+        10%, 30%, 50%, 70%, 90% {
+          transform: scale(1.1) translateY(28px); /* ปรับค่า translateY ให้เด้ง */
+        }
+        20%, 40%, 60%, 80% {
+          transform: scale(1) translateY(38px); /* ประมาณ 2 cm (38px สำหรับมือถือ) */
+        }
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .sticker {
+        width: 280px;   /* ปรับขนาดสำหรับหน้าจอเล็กมาก */
+        height: 280px;
+        transform: scale(0) translateY(28px); /* ประมาณ 2 cm (28px สำหรับหน้าจอเล็กมาก) */
+      }
+      
+      .sticker.active {
+        transform: scale(1) translateY(28px); /* ประมาณ 2 cm (28px สำหรับหน้าจอเล็กมาก) */
+      }
+      
+      @keyframes bounce {
+        0%, 100% {
+          transform: scale(1) translateY(28px); /* ประมาณ 2 cm (28px สำหรับหน้าจอเล็กมาก) */
+        }
+        10%, 30%, 50%, 70%, 90% {
+          transform: scale(1.1) translateY(18px); /* ปรับค่า translateY ให้เด้ง */
+        }
+        20%, 40%, 60%, 80% {
+          transform: scale(1) translateY(28px); /* ประมาณ 2 cm (28px สำหรับหน้าจอเล็กมาก) */
+        }
+      }
+    }
   </style>
 </head>
 <body>
   <div id="particles"></div>
+  
+  <!-- สติกเกอร์เด้ง -->
+  <div class="sticker" id="sticker">
+    <img src="https://i.postimg.cc/YqTwL5MW/Untitled-1.png" alt="สติกเกอร์">
+  </div>
   
   <h1> ☢️ all in one IS ☢️ </h1>
   <div class="icon-links">
@@ -224,6 +342,7 @@
     </a>
   </div>
 
+
   <script>
     // สร้างอนุภาคพื้นหลัง
     const particlesContainer = document.getElementById('particles');
@@ -245,16 +364,27 @@
         
         particlesContainer.appendChild(particle);
     }
+
+    // ฟังก์ชันสำหรับแสดงสติกเกอร์เด้ง
+    const sticker = document.getElementById('sticker');
+    
+    function showSticker() {
+      sticker.classList.add('active');
+      
+      // ซ่อนสติกเกอร์หลังจาก 5 วินาที
+      setTimeout(() => {
+        sticker.classList.remove('active');
+      }, 5000);
+    }
+
+    // เริ่มแสดงสติกเกอร์ทันทีเมื่อโหลดหน้าเว็บ
+    window.addEventListener('load', () => {
+      // รอ 2 วินาทีก่อนแสดงสติกเกอร์ครั้งแรก
+      setTimeout(showSticker, 2000);
+      
+      // ตั้งค่าให้แสดงสติกเกอร์ทุกๆ 1 นาที
+      setInterval(showSticker, 60000);
+    });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
